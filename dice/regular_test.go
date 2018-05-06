@@ -11,7 +11,7 @@ func Test_Regular_RollN_CorrectlySumsResults(t *testing.T) {
 
 	r := roller.WithSequence(seq)
 
-	die := Regular{r, 8}
+	die := Regular(r, 8)
 
 	expected := 10
 	actual := die.RollN(5)
@@ -26,7 +26,7 @@ func Test_Regular_RollNDetailed_GivesAllResults(t *testing.T) {
 
 	r := roller.WithSequence(seq)
 
-	die := Regular{r, 8}
+	die := Regular(r, 8)
 
 	results := die.RollNDetailed(5)
 

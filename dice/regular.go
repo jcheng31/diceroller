@@ -2,26 +2,30 @@ package dice
 
 import "github.com/jcheng31/diceroller/roller"
 
-// Regular represents a normal die.
-type Regular struct {
-	Roller  roller.Roller
-	Maximum int
+type regular struct {
+	roller roller.Roller
+	max    int
+}
+
+// Regular returns a normal die.
+func Regular(r roller.Roller, max int) Die {
+	return regular{r, max}
 }
 
 // RollN returns the total result of rolling n die.
-func (r Regular) RollN(n int) int {
+func (r regular) RollN(n int) int {
 	sum := 0
 	for i := 0; i < n; i++ {
-		sum += r.Roller.Roll(r.Maximum)
+		sum += r.roller.Roll(r.max)
 	}
 	return sum
 }
 
 // RollNDetailed returns the results of rolling n die.
-func (r Regular) RollNDetailed(n int) []int {
+func (r regular) RollNDetailed(n int) []int {
 	results := make([]int, n)
 	for i := 0; i < n; i++ {
-		results[i] = r.Roller.Roll(r.Maximum)
+		results[i] = r.roller.Roll(r.max)
 	}
 	return results
 }
