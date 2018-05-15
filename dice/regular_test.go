@@ -33,7 +33,7 @@ func Test_Regular_RollNDetailed_GivesAllResults(t *testing.T) {
 	for i, actual := range results {
 		expected := seq[i]
 		if expected != actual {
-			t.Errorf("RollNDetailed expected %v, actual %v", expected, actual)
+			t.Fatalf("RollNDetailed expected %v, actual %v", seq, results)
 		}
 	}
 }
