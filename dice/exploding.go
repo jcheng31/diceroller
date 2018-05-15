@@ -8,59 +8,38 @@ type exploding struct {
 	maxExplosions int
 }
 
-// Exploding returns a die that "explodes" - it rolls another die if it
+// Exploding returns a Die that explodes - it rolls another die if it
 // rolls its max value. This and all subsequent die also explode.
 //
-// All die explode **after** the `n` rolls have been made.
+// All die explode **after** the `n` rolls have been made, and all subsequent
+// explosions occur after all initial ones have completed.
 func Exploding(r roller.Roller, maxVal, maxExplosions int) Die {
 	return exploding{r, maxVal, maxExplosions}
 }
 
-func (e exploding) RollN(n int) int {
-	sum := 0
+func (e exploding) RollN(n int) RollResults {
+	result := RollResults{0, make([]int, 0)}
+
 	toExplode := 0
 	for i := 0; i < n; i++ {
-		result := e.roller.Roll(e.maxVal)
-		sum += result
+		r := e.roller.Roll(e.maxVal)
+		result.Total += r
+		result.Rolls = append(result.Rolls, r)
 
-		if result == e.maxVal {
+		if r == e.maxVal {
 			toExplode++
 		}
 	}
 
 	for i := 0; i < toExplode && i < e.maxExplosions; i++ {
-		result := e.roller.Roll(e.maxVal)
-		sum += result
+		r := e.roller.Roll(e.maxVal)
+		result.Total += r
+		result.Rolls = append(result.Rolls, r)
 
-		if result == e.maxVal {
+		if r == e.maxVal {
 			toExplode++
 		}
 	}
 
-	return sum
-}
-
-func (e exploding) RollNDetailed(n int) []int {
-	results := make([]int, 0)
-
-	toExplode := 0
-	for i := 0; i < n; i++ {
-		result := e.roller.Roll(e.maxVal)
-		results = append(results, result)
-
-		if result == e.maxVal {
-			toExplode++
-		}
-	}
-
-	for i := 0; i < toExplode && i < e.maxExplosions; i++ {
-		result := e.roller.Roll(e.maxVal)
-		results = append(results, result)
-
-		if result == e.maxVal {
-			toExplode++
-		}
-	}
-
-	return results
+	return result
 }

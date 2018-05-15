@@ -13,19 +13,12 @@ func Regular(r roller.Roller, max int) Die {
 }
 
 // RollN returns the total result of rolling n die.
-func (r regular) RollN(n int) int {
-	sum := 0
+func (r regular) RollN(n int) RollResults {
+	result := RollResults{0, make([]int, n)}
 	for i := 0; i < n; i++ {
-		sum += r.roller.Roll(r.max)
+		r := r.roller.Roll(r.max)
+		result.Total += r
+		result.Rolls[i] = r
 	}
-	return sum
-}
-
-// RollNDetailed returns the results of rolling n die.
-func (r regular) RollNDetailed(n int) []int {
-	results := make([]int, n)
-	for i := 0; i < n; i++ {
-		results[i] = r.roller.Roll(r.max)
-	}
-	return results
+	return result
 }

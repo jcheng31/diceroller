@@ -16,24 +16,27 @@ func Test_Regular_RollN_CorrectlySumsResults(t *testing.T) {
 	expected := 10
 	actual := die.RollN(5)
 
-	if expected != actual {
+	if expected != actual.Total {
 		t.Errorf("RollN expected %v, actual %v", expected, actual)
 	}
 }
 
-func Test_Regular_RollNDetailed_GivesAllResults(t *testing.T) {
+func Test_Regular_RollN_GivesAllResults(t *testing.T) {
 	seq := []int{1, 2, 3, 4, 5}
 
 	r := roller.WithSequence(seq)
 
 	die := Regular(r, 8)
 
-	results := die.RollNDetailed(5)
+	results := die.RollN(5)
 
-	for i, actual := range results {
-		expected := seq[i]
-		if expected != actual {
-			t.Fatalf("RollNDetailed expected %v, actual %v", seq, results)
+	if len(results.Rolls) != len(seq) {
+		t.Fatalf("RollN expected %v, actual %v", seq, results.Rolls)
+	}
+
+	for i, actual := range results.Rolls {
+		if seq[i] != actual {
+			t.Fatalf("RollN expected %v, actual %v", seq, results.Rolls)
 		}
 	}
 }
